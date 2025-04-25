@@ -69,59 +69,98 @@ The platform follows a general workflow:
 -   **Modular Model Configuration**: Model prompts and configurations are defined in separate Python files (`models/`).
 -   **Clear Logging**: Provides informative logs during execution.
 -   **Resume Support**: Can often be stopped and resumed, especially during the preparation phase, thanks to skip flags and metadata checks.
-
 ## Installation
 
 ### Prerequisites
 
--   Python 3.10+
--   `pip` and `virtualenv` (recommended)
--   [Google Cloud Account](https://cloud.google.com/)
-    -   **If using Vertex AI:** Billing enabled, Vertex AI API enabled, Cloud Storage API enabled.
-    -   **If using Gemini API:** A Gemini API Key.
--   [Google Cloud CLI](https://cloud.google.com/sdk/docs/install) (Required if using Vertex AI for authentication)
--   [`ffmpeg`](https://ffmpeg.org/download.html): Must be installed and accessible in your system's PATH for video processing (speed adjustment). Verify with `ffmpeg -version` in your terminal.
+Before you begin, ensure you have the following installed and configured:
+
+*   **Python**: Version 3.10 or higher.
+*   **Package Management**: `pip` (Python's package installer) and `virtualenv` (recommended for creating isolated Python environments).
+*   **Google Cloud Account**:
+    *   A Google Cloud account is required. [Create one here](https://cloud.google.com/).
+    *   **For Vertex AI Backend Users**:
+        *   Billing must be enabled for your Google Cloud project.
+        *   The Vertex AI API must be enabled.
+        *   The Cloud Storage API must be enabled.
+    *   **For Gemini API Backend Users**:
+        *   You need a Gemini API Key. [Get an API key here](https://aistudio.google.com/app/apikey).
+*   **Google Cloud CLI (`gcloud`)**:
+    *   Required for authentication if using the Vertex AI backend.
+    *   Follow the [Official Google Cloud SDK installation guide](https://cloud.google.com/sdk/docs/install).
+*   **`ffmpeg`**:
+    *   Required for video processing tasks (e.g., adjusting video speed).
+    *   Download from the [official ffmpeg website](https://ffmpeg.org/download.html).
+    *   **Installation Instructions:**
+        *   **Linux (Ubuntu/Debian):**
+            ```bash
+            sudo apt update && sudo apt install ffmpeg
+            ```
+        *   **macOS (using Homebrew):**
+            ```bash
+            brew install ffmpeg
+            ```
+        *   **Windows (using Winget):**
+            ```bash
+            winget install --id=Gyan.FFmpeg -e
+            ```
+    *   Verify the installation by running:
+        ```bash
+        ffmpeg -version
+        ```
+
+
+
+ **Install `ffmpeg`:** Follow instructions for your OS from the [official ffmpeg website](https://ffmpeg.org/download.html).
+    *   **Linux (Ubuntu/Debian):** `sudo apt update && sudo apt install ffmpeg`
+    *   **Windows (Scoop/Chocolatey):** `winget install --id=Gyan.FFmpeg  -e`
 
 ### Google Cloud Setup (Required for Vertex AI Backend)
 
-1.  **Install `ffmpeg`:** Follow instructions for your OS from the [official ffmpeg website](https://ffmpeg.org/download.html).
-    *   **Linux (Ubuntu/Debian):** `sudo apt update && sudo apt install ffmpeg`
-    *   **macOS (Homebrew):** `brew install ffmpeg`
-    *   **Windows (Scoop/Chocolatey):** `scoop install ffmpeg` or `choco install ffmpeg`
+If you plan to use the Vertex AI backend, follow these steps to configure your Google Cloud environment:
 
-2.  **Install Google Cloud CLI:** Follow the [official instructions](https://cloud.google.com/sdk/docs/install).
+1.  **Install the Google Cloud CLI**:
+    If you haven't already installed it during the prerequisite step, use one of the following methods:
 
-3.  **Initialize Google Cloud CLI:**
+    *   **Debian/Ubuntu:**
+        ```bash
+        curl -sSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg
+        echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+        sudo apt-get update && sudo apt-get install google-cloud-sdk
+        ```
+    *   **macOS (with Homebrew):**
+        ```bash
+        brew install --cask google-cloud-sdk
+        ```
+    *   **Windows (with Winget):**
+        ```bash
+        winget install GoogleCloudSDK.GoogleCloudSDK
+        ```
+    *   For other operating systems, refer to the [official installation guide](https://cloud.google.com/sdk/docs/install).
+
+2.  **Initialize the Google Cloud CLI**:
+    This command guides you through initial setup, including logging in and setting a default project.
     ```bash
     gcloud init
     ```
-    Follow the prompts to log in and select/create a project.
 
-4.  **Login for Application Default Credentials (ADC):**
+3.  **Log in to Google Cloud**:
+    Ensure your CLI is authenticated with your Google Cloud account.
+    ```bash
+    gcloud auth login
+    ```
+
+4.  **Configure Application Default Credentials (ADC)**:
+    This allows applications (like this project) to easily authenticate with Google Cloud APIs.
     ```bash
     gcloud auth application-default login
     ```
-    This allows the SDK to authenticate automatically when running locally for Vertex AI.
 
-5.  **Set Project and Location (Optional but Recommended):**
+5.  **Set Your Default Project and Region**:
+    Configure the CLI to use your specific Google Cloud project and preferred compute region. Replace `YOUR_PROJECT_ID` and `YOUR_REGION` with your actual values (e.g., `us-central1`).
     ```bash
-    # Replace with your actual project ID and desired region
     gcloud config set project YOUR_PROJECT_ID
-    gcloud config set compute/region YOUR_REGION # e.g., us-central1
-    ```
-    Ensure the chosen region supports the desired Gemini models on Vertex AI.
-
-6.  **Enable APIs:** Ensure the following APIs are enabled in your Google Cloud project:
-    *   Vertex AI API
-    *   Cloud Storage API
-    ```bash
-    gcloud services enable aiplatform.googleapis.com storage.googleapis.com
-    ```
-
-7.  **Create GCS Bucket (If using Vertex AI):** You need a GCS bucket for video storage.
-    ```bash
-    # Replace YOUR_BUCKET_NAME with a unique name and choose a location
-    gsutil mb -p YOUR_PROJECT_ID -l YOUR_REGION gs://YOUR_BUCKET_NAME/
+    gcloud config set compute/region YOUR_REGION
     ```
 
 ### Python Environment Setup
