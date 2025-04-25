@@ -128,10 +128,9 @@ def get_model_name_gemini_2_0_flash_ver3():
 
     1. Move the final detailed answer to the top of the output.
     2. After a blank line, include the **full** original reasoning process inside a block that starts with '''thinking and ends with ``` (maintain the formatting).
-    3. Remove any explicit references to answer hints, such as "examiner note", "the answer is", or similar phrasing that reveals or telegraphs the answer.
 
     **STRICT GUIDELINES:**
-    - DO NOT delete or modify the original logic or thought process in any way. Your edits should only remove hint-like language.
+    - DO NOT delete or modify the original logic or thought process in any way. 
     - DO NOT add any new reasoning, details, or assumptions not already present in the input.
     - Focus purely on clarity, structure, and compliance with the above rules.
     """

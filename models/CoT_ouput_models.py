@@ -187,7 +187,6 @@ def get_model_name_gemini_2_0_flash():
 
 def get_model_name_gemini_2_5_pro_preview_03_25():
     
-    # Avengers Assemble but thanos snapped the hints
     MODEL_NAME = "gemini-2.5-pro-preview-03-25"
 
     REQUESTS_PER_MINUTE = 7      
