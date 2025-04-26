@@ -275,7 +275,7 @@ This project utilizes Python's standard `logging` module, configured to output d
 
 
 ## Best Practices
-
+- **Submission:** Submit the full chain of thought result for the best benchmark scores.
 -   **Virtual Environments:** Always use a Python virtual environment (like `venv`) to manage project dependencies and avoid conflicts with other projects or your system's Python installation. Activate it before installing requirements or running notebooks.
 -   **Configuration Management:**
     -   Carefully review and set the configuration variables in the **Config Settings** cell of *each notebook* before running. Pay close attention to `USE_VERTEX`, `PROJECT_ID`/`GEMINI_API_KEY`, `GCS_BUCKET`, model names, and file paths.
